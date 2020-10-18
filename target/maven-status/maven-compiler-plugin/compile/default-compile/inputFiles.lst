@@ -1,7 +1,0 @@
-/home/acidonpe/IdeaProjects/myapp/src/main/java/com/acidonper/myapp/entities/User.java
-/home/acidonpe/IdeaProjects/myapp/src/main/java/com/acidonper/myapp/entities/LoadDatabase.java
-/home/acidonpe/IdeaProjects/myapp/src/main/java/com/acidonper/myapp/mappers/UserMapper.java
-/home/acidonpe/IdeaProjects/myapp/src/main/java/com/acidonper/myapp/web/UsersController.java
-/home/acidonpe/IdeaProjects/myapp/src/main/java/com/acidonper/myapp/dtos/UserDto.java
-/home/acidonpe/IdeaProjects/myapp/src/main/java/com/acidonper/myapp/entities/repositories/UserRepository.java
-/home/acidonpe/IdeaProjects/myapp/src/main/java/com/acidonper/myapp/Application.java
