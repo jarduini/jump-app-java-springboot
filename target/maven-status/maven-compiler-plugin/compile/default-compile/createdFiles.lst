@@ -1,7 +1,0 @@
-com/acidonper/myapp/entities/repositories/UserRepository.class
-com/acidonper/myapp/mappers/UserMapper.class
-com/acidonper/myapp/entities/User.class
-com/acidonper/myapp/web/UsersController.class
-com/acidonper/myapp/dtos/UserDto.class
-com/acidonper/myapp/Application.class
-com/acidonper/myapp/mappers/UserMapperImpl.class
