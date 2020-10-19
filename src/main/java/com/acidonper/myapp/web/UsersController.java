@@ -4,7 +4,9 @@ import com.acidonper.myapp.dtos.UserDto;
 import com.acidonper.myapp.entities.User;
 import com.acidonper.myapp.entities.repositories.UserRepository;
 import com.acidonper.myapp.mappers.UserMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 
@@ -34,6 +36,18 @@ public class UsersController {
             usersDto.add(userDto);
         }
         return usersDto;
+    }
+
+    @GetMapping("/users/{id}")
+    UserDto run(@PathVariable String id) throws Exception {
+        List<User> users = repository.findByDni(id);
+        try{
+            UserDto userDto = UserMapper.INSTANCE.userToUserDTO(users.get(0));
+            return(userDto);
+        }
+        catch(Exception handlerException){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping("/users")

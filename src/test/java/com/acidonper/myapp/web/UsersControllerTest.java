@@ -2,9 +2,12 @@ package com.acidonper.myapp.web;
 
 
 import com.acidonper.myapp.dtos.UserDto;
+import com.acidonper.myapp.entities.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -21,6 +24,14 @@ class UsersControllerTest {
 
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    private UserRepository repository;
+
+    @AfterEach
+    void run(){
+        repository.deleteAll();
+    }
 
     public static String asJsonString(final Object obj) {
         try {
@@ -39,9 +50,50 @@ class UsersControllerTest {
 
     @Test
     public void getUsers() throws Exception {
+        UserDto userDto = new UserDto("0000000X","test", "01");
+        mvc.perform(MockMvcRequestBuilders.post("/users")
+                .content(asJsonString(userDto))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
         mvc.perform(MockMvcRequestBuilders.get("/users").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("[{\"firstName\":\"test\",\"lastName\":\"01\",\"id\":\"0000000X\"}]")));
+    }
+
+    @Test
+    public void getSpecificUsersOk() throws Exception {
+        UserDto userDto = new UserDto("0000000X","test", "01");
+        mvc.perform(MockMvcRequestBuilders.post("/users")
+                .content(asJsonString(userDto))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        mvc.perform(MockMvcRequestBuilders.get("/users/0000000X").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("{\"firstName\":\"test\",\"lastName\":\"01\",\"id\":\"0000000X\"}")));
+    }
+
+    @Test
+    public void getSpecificUsersError() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/users/0000000X").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void postUserExists() throws Exception {
+        UserDto userDto = new UserDto("0000000X","test", "01");
+        mvc.perform(MockMvcRequestBuilders.post("/users")
+                .content(asJsonString(userDto))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        mvc.perform(MockMvcRequestBuilders.post("/users")
+                .content(asJsonString(userDto))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("User test exists")));
     }
 
     @Test
@@ -52,19 +104,7 @@ class UsersControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("User test exists")));
-    }
-
-    @Test
-    public void postUserRep() throws Exception {
-        UserDto userDto = new UserDto("0000000X","test", "01");
-        mvc.perform(MockMvcRequestBuilders.post("/users")
-                .content(asJsonString(userDto))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("User test created")));
     }
-
 
 }
