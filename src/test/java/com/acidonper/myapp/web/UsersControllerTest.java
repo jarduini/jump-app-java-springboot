@@ -2,6 +2,7 @@ package com.acidonper.myapp.web;
 
 
 import com.acidonper.myapp.dtos.UserDto;
+import com.acidonper.myapp.entities.User;
 import com.acidonper.myapp.entities.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -49,12 +50,7 @@ class UsersControllerTest {
 
     @Test
     public void getUsers() throws Exception {
-        UserDto userDto = new UserDto("0000000X","test", "01");
-        mvc.perform(MockMvcRequestBuilders.post("/users")
-                .content(asJsonString(userDto))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON));
-
+        createLocalUser();
         mvc.perform(MockMvcRequestBuilders.get("/users").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("[{\"firstName\":\"test\",\"lastName\":\"01\",\"id\":\"0000000X\"}]")));
@@ -62,12 +58,7 @@ class UsersControllerTest {
 
     @Test
     public void getSpecificUsersOk() throws Exception {
-        UserDto userDto = new UserDto("0000000X","test", "01");
-        mvc.perform(MockMvcRequestBuilders.post("/users")
-                .content(asJsonString(userDto))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON));
-
+        createLocalUser();
         mvc.perform(MockMvcRequestBuilders.get("/users/0000000X").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("{\"firstName\":\"test\",\"lastName\":\"01\",\"id\":\"0000000X\"}")));
@@ -81,18 +72,19 @@ class UsersControllerTest {
 
     @Test
     public void postUserExists() throws Exception {
+        createLocalUser();
         UserDto userDto = new UserDto("0000000X","test", "01");
-        mvc.perform(MockMvcRequestBuilders.post("/users")
-                .content(asJsonString(userDto))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON));
-
         mvc.perform(MockMvcRequestBuilders.post("/users")
                 .content(asJsonString(userDto))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("User test exists")));
+    }
+
+    private void createLocalUser() {
+        User user = new User("0000000X","test", "01");
+        repository.save(user);
     }
 
     @Test
