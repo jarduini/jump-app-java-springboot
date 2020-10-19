@@ -24,7 +24,7 @@ hs_err_pid*
 
 # Intellij
 .idea
-.myapp.iml
+myapp.iml
 
 # Target
 target
