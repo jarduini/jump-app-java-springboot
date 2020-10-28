@@ -1,6 +1,7 @@
 package com.acidonper.myapp.web;
 
 import com.acidonper.myapp.dtos.UserDto;
+import com.acidonper.myapp.entities.Response;
 import com.acidonper.myapp.entities.User;
 import com.acidonper.myapp.entities.repositories.UserRepository;
 import com.acidonper.myapp.mappers.UserMapper;
@@ -16,9 +17,14 @@ import java.util.List;
 @RestController
 public class UsersController {
 
-    @RequestMapping("/home")
+    @RequestMapping("/")
     public String index() {
-        return "Greetings from Spring Boot!";
+        return "/ -> Greetings from Spring Boot!";
+    }
+
+    @RequestMapping("/home")
+    public String home() {
+        return "/home -> Greetings from Spring Boot!";
     }
 
     private final UserRepository repository;
@@ -26,21 +32,25 @@ public class UsersController {
         this.repository = repository;
     }
 
-    List<UserDto> usersDto  = new ArrayList<UserDto>();
-
     @GetMapping("/users")
-    List<UserDto> run() {
+    Response run() {
+        List<UserDto> usersDto  = new ArrayList<UserDto>();
         List<User> users = repository.findAll();
+
         for(User user : users) {
             UserDto userDto = UserMapper.INSTANCE.userToUserDTO(user);
             usersDto.add(userDto);
         }
-        return usersDto;
+
+        Response response = new Response(usersDto.toString(),200 );
+        return response;
     }
 
     @GetMapping("/users/{id}")
     UserDto run(@PathVariable String id) throws Exception {
+        List<UserDto> usersDto  = new ArrayList<UserDto>();
         List<User> users = repository.findByDni(id);
+
         try{
             UserDto userDto = UserMapper.INSTANCE.userToUserDTO(users.get(0));
             return(userDto);
@@ -68,6 +78,12 @@ public class UsersController {
             reqStatus = "exists";
         }
         return "User " + user.firstName + " " + reqStatus;
-
     }
+
+    @GetMapping("/jump")
+    Response jumpGet(){
+        Response response = new Response("/jump - Greetings from Spring Boot!",200 );
+        return response;
+    }
+
 }
