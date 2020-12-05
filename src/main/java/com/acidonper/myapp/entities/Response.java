@@ -9,4 +9,10 @@ public class Response {
         this.message = message;
         this.code = code;
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "Response[message='%s', code='%s']", message, code.toString());
+    }
 }

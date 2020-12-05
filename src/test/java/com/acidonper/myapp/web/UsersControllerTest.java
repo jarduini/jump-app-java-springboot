@@ -1,6 +1,7 @@
 package com.acidonper.myapp.web;
 
 
+import com.acidonper.myapp.dtos.JumpDto;
 import com.acidonper.myapp.dtos.UserDto;
 import com.acidonper.myapp.entities.User;
 import com.acidonper.myapp.entities.repositories.UserRepository;
@@ -39,20 +40,6 @@ class UsersControllerTest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Test
-    public void getindex() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("/ -> Greetings from Spring Boot!")));
-    }
-
-    @Test
-    public void getHome() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/home").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("/home -> Greetings from Spring Boot!")));
     }
 
     @Test
@@ -104,12 +91,4 @@ class UsersControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("User test created")));
     }
-
-    @Test
-    public void getJump() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/jump").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("{\"message\":\"/jump - Greetings from Spring Boot!\",\"code\":200}")));
-    }
-
 }

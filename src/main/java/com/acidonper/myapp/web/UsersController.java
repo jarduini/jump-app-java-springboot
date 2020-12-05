@@ -10,22 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class UsersController {
-
-    @RequestMapping("/")
-    public String index() {
-        return "/ -> Greetings from Spring Boot!";
-    }
-
-    @RequestMapping("/home")
-    public String home() {
-        return "/home -> Greetings from Spring Boot!";
-    }
 
     private final UserRepository repository;
     UsersController(UserRepository repository) {
@@ -34,6 +23,9 @@ public class UsersController {
 
     @GetMapping("/users")
     Response run() {
+        System.out.println("Received GET /users");
+
+        // Obtain all users
         List<UserDto> usersDto  = new ArrayList<UserDto>();
         List<User> users = repository.findAll();
 
@@ -48,6 +40,9 @@ public class UsersController {
 
     @GetMapping("/users/{id}")
     UserDto run(@PathVariable String id) throws Exception {
+        System.out.println("Received GET /users");
+
+        // Obtain user received in call parameters
         List<UserDto> usersDto  = new ArrayList<UserDto>();
         List<User> users = repository.findByDni(id);
 
@@ -62,6 +57,9 @@ public class UsersController {
 
     @PostMapping("/users")
     String run(@Valid @RequestBody UserDto newUser) {
+        System.out.println("Received POST /users");
+
+        // Map object received
         User user = UserMapper.INSTANCE.userDTOtoUser(newUser);
 
         // Obtain User with DNI in the database
@@ -79,11 +77,4 @@ public class UsersController {
         }
         return "User " + user.firstName + " " + reqStatus;
     }
-
-    @GetMapping("/jump")
-    Response jumpGet(){
-        Response response = new Response("/jump - Greetings from Spring Boot!",200 );
-        return response;
-    }
-
 }
