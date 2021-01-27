@@ -1,6 +1,7 @@
 package com.acidonper.myapp.web;
 
 
+import com.acidonper.myapp.dtos.JumpDto;
 import com.acidonper.myapp.dtos.UserDto;
 import com.acidonper.myapp.entities.User;
 import com.acidonper.myapp.entities.repositories.UserRepository;
@@ -42,18 +43,11 @@ class UsersControllerTest {
     }
 
     @Test
-    public void getHome() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/home").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("Greetings from Spring Boot!")));
-    }
-
-    @Test
     public void getUsers() throws Exception {
         createLocalUser();
         mvc.perform(MockMvcRequestBuilders.get("/users").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("[{\"firstName\":\"test\",\"lastName\":\"01\",\"id\":\"0000000X\"}]")));
+                .andExpect(content().string(equalTo("{\"message\":\"[User[id='0000000X', firstName='test', lastName='01']]\",\"code\":200}")));
     }
 
     @Test
@@ -97,5 +91,4 @@ class UsersControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("User test created")));
     }
-
 }
